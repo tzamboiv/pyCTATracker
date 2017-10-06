@@ -1,7 +1,7 @@
 import json
 import urllib.request
 
-key = ""
+key = "8MhEGrtdUgKBEa4bU242yAmKA"
 
 def request(url):
     """general function for pulling down url requests
@@ -45,7 +45,29 @@ def get_routes(key = key):
     return ROUTES_LIST
 
 def get_directions(rt, key = key):
+    """takes route number and gets list of directions for route"""
     URL = "http://www.ctabustracker.com/bustime/api/v2/getdirections?key="+ key + "&rt=" + rt + "&format=json"
     print(URL)
     return request(URL)["bustime-response"]
-print(get_directions("2"))
+
+def get_stops(rt, direction, key = key):
+    """get's list of directional stops from route number and direction
+    direction must be in the form 'Northbound', 'Southbound', 'Eastbound', or 'Westbound'
+    """
+    DIRECTIONS = ["Northbound","Southbound","Eastbound", "Westbound"]
+    if direction not in DIRECTIONS:
+        print("Error, please use 'Northbound', 'Southbound', 'Eastbound', or 'Westbound' for direction argument")
+        return None
+    URL =  "http://www.ctabustracker.com/bustime/api/v2/getstops?key=" + key + "&rt=" + rt + "&dir=" + direction + "&format=json"
+    print(URL)
+    return request(URL)["bustime-response"]["stops"]
+def get_predictions(stpid, rt, key = key):
+    STPID = ""
+    for i in stpid:
+        STPID = STPID+ "," + i
+    STPID = STPID[1:]
+    URL = "http://www.ctabustracker.com/bustime/api/v2/getpredictions?key=" + key + "&rt=" + rt + "&stpid=" + STPID + "&format=json"
+    print(URL)
+    return request(URL)["bustime-response"]
+print(get_stops("55", "Eastbound")[15])
+print(get_predictions(["10500"],"55"))
