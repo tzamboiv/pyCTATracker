@@ -1,7 +1,7 @@
 import json
 import urllib.request
 
-key = "8MhEGrtdUgKBEa4bU242yAmKA"
+key = ""
 
 def request(url):
     """general function for pulling down url requests
